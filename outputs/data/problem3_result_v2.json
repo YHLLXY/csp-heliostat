@@ -1,0 +1,63 @@
+{
+  "problem": 3,
+  "type": "heterogeneous_5groups",
+  "method": "two_phase_DE_calibrated",
+  "calibration_ratio": 0.922955,
+  "n_groups": 5,
+  "n_rings": 25,
+  "n_vars": 12,
+  "phase1": {
+    "sampling": "noon_12",
+    "maxiter": 25,
+    "popsize": 5,
+    "actual_pop": 60,
+    "nfev": 130
+  },
+  "phase2": {
+    "sampling": "full_60",
+    "maxiter": 8,
+    "popsize": 5,
+    "actual_pop": 60,
+    "warm_start_from": "phase1_population",
+    "nfev": 58,
+    "converged": false
+  },
+  "conclusion": "5组分组异构可提升 P/A 至 531.3 W/m2 (+1.0%)，满足60MW约束",
+  "constraint_handling": "power_penalty_1e4_calibrated",
+  "best_params": {
+    "x_t": 0.33,
+    "y_t": -7.04
+  },
+  "per_group": [
+    {
+      "group": 0,
+      "W": 5.998,
+      "h": 2.607
+    },
+    {
+      "group": 1,
+      "W": 5.95,
+      "h": 2.95
+    },
+    {
+      "group": 2,
+      "W": 5.98,
+      "h": 3.003
+    },
+    {
+      "group": 3,
+      "W": 5.96,
+      "h": 2.781
+    },
+    {
+      "group": 4,
+      "W": 5.975,
+      "h": 3.005
+    }
+  ],
+  "best_P_avg_MW": 60.5225,
+  "best_P_per_area_W_m2": 531.32,
+  "best_eta_avg": 0.531156,
+  "best_n_mirrors": 3195,
+  "best_total_area_m2": 113909.59620434236
+}

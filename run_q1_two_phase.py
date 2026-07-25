@@ -199,10 +199,10 @@ def run_two_phase_de():
     # 阶段 1：noon-only 快搜
     # ============================================================
     print(f"\n{'='*40}")
-    print(f"阶段 1：noon-only DE（40代, popsize=15）")
+    print(f"阶段 1：noon-only DE（25代, popsize=10）")
     print(f"{'='*40}")
 
-    init_pop_p1 = build_initial_population(warm_start, n_rings, 15)
+    init_pop_p1 = build_initial_population(warm_start, n_rings, 10)
 
     history = []
     _gen_counter = [0]
@@ -220,7 +220,7 @@ def run_two_phase_de():
         P_full_est = P_noon * CALIBRATION_RATIO
 
         # 每5代 + 最后一代跑 full-60 验证
-        if gen % 5 == 0 or gen >= 39:
+        if gen % 5 == 0 or gen >= PHASE1_MAXITER - 1:
             r_full = _simulate_zoned(params, n_rings, schedule=full_schedule)
             P_full = r_full['P_field_avg_MW']
             P_per_area_full = P_full / r_full['total_area_m2'] if r_full['total_area_m2'] > 0 else 0
@@ -247,16 +247,20 @@ def run_two_phase_de():
             'n_mirrors': r_noon['n_mirrors'],
         }
         history.append(entry)
+        p_full_str = f"{P_full:.2f}" if P_full is not None else "N/A"
         print(f"  [Ph1] gen {gen:2d}: P_noon={P_noon:.2f}, P_full_est={P_full_est:.2f}, "
               f"constraint_est={entry['constraint_estimated']}, "
-              f"P_full_actual={P_full:.2f if P_full else 'N/A'}, "
-              f"constraint_actual={constraint_actual}")
+              f"P_full_actual={p_full_str}, "
+              f"constraint_actual={constraint_actual}", flush=True)
+
+    PHASE1_MAXITER = 25
+    PHASE1_POPSIZE = 10
 
     result_p1 = differential_evolution(
         lambda p: objective_phase1(p, n_rings, noon_schedule),
         bounds=bounds,
-        maxiter=40,
-        popsize=15,
+        maxiter=PHASE1_MAXITER,
+        popsize=PHASE1_POPSIZE,
         tol=1e-8,
         seed=42,
         init=init_pop_p1,
@@ -269,26 +273,27 @@ def run_two_phase_de():
     # ============================================================
     # 阶段 2：full-60 精修
     # ============================================================
+    PHASE2_MAXITER = 8
+    PHASE2_POPSIZE = 5
+
     print(f"\n{'='*40}")
-    print(f"阶段 2：full-60 DE（10代, popsize=5, warm-start）")
+    print(f"阶段 2：full-60 DE（{PHASE2_MAXITER}代, popsize={PHASE2_POPSIZE}, warm-start）")
     print(f"{'='*40}")
 
     # 用阶段1的最终种群做 warm-start
-    # differential_evolution 内部会保存最终种群
-    # 如果种群大小不同，从阶段1种群中采样
     if hasattr(result_p1, 'population') and result_p1.population is not None:
         pop_p1 = result_p1.population
-        if len(pop_p1) >= 5:
-            indices = np.random.RandomState(43).choice(len(pop_p1), 5, replace=False)
+        if len(pop_p1) >= PHASE2_POPSIZE:
+            indices = np.random.RandomState(43).choice(len(pop_p1), PHASE2_POPSIZE, replace=False)
             init_pop_p2 = pop_p1[indices]
         else:
-            init_pop_p2 = np.tile(pop_p1[0:1], (5, 1))
+            init_pop_p2 = np.tile(pop_p1[0:1], (PHASE2_POPSIZE, 1))
     else:
         # Fallback: 用阶段1最优解生成种群
         best_p1 = result_p1.x
         init_pop_p2 = [best_p1]
         np.random.seed(43)
-        for _ in range(4):
+        for _ in range(PHASE2_POPSIZE - 1):
             perturbed = best_p1.copy()
             perturbed *= np.random.uniform(0.95, 1.05, size=len(best_p1))
             perturbed[0] = np.clip(perturbed[0], -100, 100)
@@ -303,7 +308,7 @@ def run_two_phase_de():
     def callback_phase2(xk, convergence):
         gen = _gen_counter_p2[0]
         _gen_counter_p2[0] += 1
-        global_gen = 40 + gen
+        global_gen = PHASE1_MAXITER + gen
 
         params = np.clip(xk, [b[0] for b in bounds], [b[1] for b in bounds])
 
@@ -331,13 +336,13 @@ def run_two_phase_de():
         history.append(entry)
         print(f"  [Ph2] gen {global_gen:2d}: P_full={P_full:.2f}, "
               f"P/A_full={P_per_area_full*1e6:.1f} W/m2, "
-              f"constraint={'OK' if constraint_actual else 'FAIL'}")
+              f"constraint={'OK' if constraint_actual else 'FAIL'}", flush=True)
 
     result_p2 = differential_evolution(
         lambda p: objective_phase2(p, n_rings, full_schedule),
         bounds=bounds,
-        maxiter=10,
-        popsize=5,
+        maxiter=PHASE2_MAXITER,
+        popsize=PHASE2_POPSIZE,
         tol=1e-10,
         seed=43,
         init=init_pop_p2,
@@ -416,14 +421,14 @@ def run_two_phase_de():
         'calibration_ratio': CALIBRATION_RATIO,
         'phase1': {
             'sampling': 'noon_12',
-            'maxiter': 40,
-            'popsize': 15,
+            'maxiter': PHASE1_MAXITER,
+            'popsize': PHASE1_POPSIZE,
             'nfev': result_p1.nfev,
         },
         'phase2': {
             'sampling': 'full_60',
-            'maxiter': 10,
-            'popsize': 5,
+            'maxiter': PHASE2_MAXITER,
+            'popsize': PHASE2_POPSIZE,
             'warm_start_from': 'phase1_population',
             'nfev': result_p2.nfev,
             'converged': converged,
