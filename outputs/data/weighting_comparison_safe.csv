@@ -1,0 +1,13 @@
+n_rings,method,P_avg_MW,eta_avg,satisfied
+25,Equal weight,55.234,0.490507,No
+25,sin_a_s weighted,60.5782,0.525605,Yes
+25,DNI weighted,56.5613,0.498911,No
+25,cos_w weighted,56.1673,0.49618,No
+26,Equal weight,56.5519,0.482569,No
+26,sin_a_s weighted,62.1484,0.518284,Yes
+26,DNI weighted,57.9442,0.491169,No
+26,cos_w weighted,57.5544,0.488585,No
+27,Equal weight,58.078,0.477408,No
+27,sin_a_s weighted,63.7969,0.512367,Yes
+27,DNI weighted,59.4918,0.485741,No
+27,cos_w weighted,59.1042,0.483287,No

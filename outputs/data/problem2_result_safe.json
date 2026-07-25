@@ -1,0 +1,24 @@
+{
+  "problem": 2,
+  "type": "uniform_safe_margin",
+  "params": {
+    "x_t": 0,
+    "y_t": 0,
+    "W": 6.0,
+    "h_inst": 3.0,
+    "n_rings": 25
+  },
+  "P_avg_MW": 60.5782,
+  "eta_avg": 0.525605,
+  "n_mirrors": 3200,
+  "total_area_m2": 115200.0,
+  "P_per_area_W_m2": 525.85,
+  "all_weighting_methods_satisfied": false,
+  "weighting_min_P": 55.234,
+  "weighting_details": {
+    "Equal weight": 55.234,
+    "sin_a_s weighted": 60.5782,
+    "DNI weighted": 56.5613,
+    "cos_w weighted": 56.1673
+  }
+}

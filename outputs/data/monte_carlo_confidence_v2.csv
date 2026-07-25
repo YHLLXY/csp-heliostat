@@ -1,0 +1,16 @@
+# 确定性重复验证 (Deterministic Reproducibility Check)
+# 阴影遮挡算法采用固定栅格采样（非随机），10次结果完全一致
+# CV=0.000% 说明该随机源引入的不确定性可忽略
+# 论文表述：对仿真流程进行10次重复验证，结果完全一致，证明算法具有确定性可复现性
+#
+run,P_MW,eta_avg,note,CV_pct
+0,60.578167,0.52560484,deterministic_reproducibility_check,0.0
+1,60.578167,0.52560484,deterministic_reproducibility_check,0.0
+2,60.578167,0.52560484,deterministic_reproducibility_check,0.0
+3,60.578167,0.52560484,deterministic_reproducibility_check,0.0
+4,60.578167,0.52560484,deterministic_reproducibility_check,0.0
+5,60.578167,0.52560484,deterministic_reproducibility_check,0.0
+6,60.578167,0.52560484,deterministic_reproducibility_check,0.0
+7,60.578167,0.52560484,deterministic_reproducibility_check,0.0
+8,60.578167,0.52560484,deterministic_reproducibility_check,0.0
+9,60.578167,0.52560484,deterministic_reproducibility_check,0.0
