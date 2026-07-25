@@ -1,0 +1,16 @@
+{
+  "problem": 2,
+  "type": "uniform",
+  "params": {
+    "x_t": 0,
+    "y_t": 0,
+    "W": 6.0,
+    "h_inst": 3.0,
+    "n_rings": 25
+  },
+  "P_avg_MW": 60.5781669562503,
+  "eta_avg": 0.5256048354356923,
+  "n_mirrors": 3200,
+  "total_area_m2": 115200.0,
+  "P_per_area_W_m2": 525.8521437174505
+}

@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.nbi
+*.nbc
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Temporary run logs
+*.log
+run_*.py
+finish_*.py
+
+# Sensitive
+.env

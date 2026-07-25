@@ -1,0 +1,5 @@
+method,P_avg_MW,eta_avg
+Equal weight,55.2340,0.490507
+sin_a_s weighted,60.5782,0.525605
+DNI weighted,56.5613,0.498911
+cos_w weighted,56.1673,0.496180
